@@ -1,42 +1,45 @@
 # Proyek Analisis Data: E-Commerce Dataset
-- **Nama:** [Nama Kamu]
-- **Email:** [Email Dicoding Kamu]
-- **ID Dicoding:** [ID Dicoding Kamu]
 
 ---
-## Menentukan Pertanyaan Bisnis
+## A. Menentukan Pertanyaan Bisnis
 *(Bagian ini dapat diisi setelah merumuskan pertanyaan bisnis)*
 
-## Data Wrangling
+## B. Data Wrangling
 Data Wrangling adalah proses mengumpulkan, menilai, dan membersihkan data agar siap digunakan untuk analisis.
 
-### 1. Gathering Data
-Pada tahap ini, kita memuat dataset E-Commerce dari file lokal `.csv` ke dalam DataFrame menggunakan pustaka `pandas`.
+1. Gathering Data: Pada tahap ini, kita memuat dataset E-Commerce dari file lokal `.csv` ke dalam DataFrame menggunakan pustaka `pandas`.
 
-### 2. Assessing Data
-Pada tahap ini, kita mengevaluasi kualitas data dengan mengecek:
-1. **Tipe Data** masing-masing kolom
-2. **Missing Value** (nilai yang hilang)
-3. **Data Duplikat**
-4. **Inaccurate Value** (nilai tidak akurat / anomali)
+2. Assessing Data: Pada tahap ini, kita mengevaluasi kualitas data dengan mengecek:
+   - Tipe Data masing-masing kolom
+   - Missing Value (nilai yang hilang)
+   - Data Duplikat
+   - Inaccurate Value (nilai tidak akurat / anomali)
 
-#### 📌 Rangkuman Temuan Evaluasi Data (Assessing Data Result)
+   #### 🔍 Ringkasan Temuan Evaluasi Data (Assessing Data Summary)
+   Berdasarkan pengecekan yang telah dilakukan, berikut adalah ringkasan masalah kualitas data yang ditemukan:
 
-Berdasarkan pengecekan yang telah dilakukan, berikut adalah ringkasan masalah kualitas data yang ditemukan:
 
-1. **`geolocation_df`**:
-   - Terdapat **261,831** data duplikat.
-2. **`order_reviews_df`**:
-   - Terdapat *missing value* pada kolom `review_comment_title` (87,656) dan `review_comment_message` (58,247).
-3. **`orders_df`**:
-   - Terdapat *missing value* pada kolom tanggal delivery/approval (`order_approved_at`, `order_delivered_carrier_date`, `order_delivered_customer_date`).
-   - Tipe data kolom tanggal masih berbentuk `object`/`string`, perlu diubah menjadi `datetime`.
-4. **`products_df`**:
-   - Terdapat *missing value* pada kategori produk, deskripsi, dimensi, dan foto.
-   - Terdapat *inaccurate value* / anomali pada kolom `product_weight_g`.
+| Nama DataFrame | Tipe Data | Missing Value | Duplicate Data | Inaccurate Value / Anomali |
+| :--- | :---: | :--- | :---: | :--- |
+| `customers_df` | OK | - | 0 | - |
+| `geolocation_df` | OK | - | **261,831** | - |
+| `order_items_df` | OK | - | 0 | - |
+| `order_payments_df` | OK | - | 0 | - |
+| `order_reviews_df` | OK | • `review_comment_title`: 87,656<br>• `review_comment_message`: 58,247 | 0 | - |
+| `orders_df` | OK | • `order_approved_at`: 160<br>• `order_delivered_carrier_date`: 1,783<br>• `order_delivered_customer_date`: 2,965 | 0 | - |
+| `product_cate_name_df` | OK | - | 0 | - |
+| `products_df` | OK | • `product_category_name`: 610<br>• `product_name_lenght`: 610<br>• `product_description_lenght`: 610<br>• `product_photos_qty`: 610<br>• `product_weight_g`: 2<br>• `product_length_cm`: 2<br>• `product_height_cm`: 2<br>• `product_width_cm`: 2 | 0 | Terdapat *inaccurate value* pada kolom `product_weight_g` |
+| `sellers_df` | OK | - | 0 | - |
 
-### 3. Cleaning Data
-Pada tahap ini, kita akan menangani (*handling*) masalah-masalah kualitas data yang telah ditemukan pada proses *Assessing Data* sebelumnya.
+---
+
+3. Cleaning Data: Pada tahap ini, menangani (*handling*) masalah-masalah kualitas data yang telah ditemukan pada proses *Assessing Data* sebelumnya.
+
+
+
+
+
+
 
 **Strategi Pembersihan:**
 - **Pembersihan Data Duplikat**: Menghapus baris duplikat pada `geolocation_df`.
