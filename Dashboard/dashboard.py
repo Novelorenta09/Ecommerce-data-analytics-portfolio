@@ -7,7 +7,7 @@ sns.set(style='dark')
 
 # set page dashboard
 st.set_page_config(
-    page_title= "Ecommerce Dashboard 2018",
+    page_title= "🛍️ Ecommerce Dashboard",
     page_icon="🐱‍🚀",
     layout="wide"
 )
@@ -15,8 +15,7 @@ st.set_page_config(
 # set stye seaborn
 sns.set_theme(style="whitegrid")
 
-# dashboard_df = pd.read_csv("all_table_df.zip")
-dashboard_df = pd.read_csv("Dashboard/all_table_df.zip")
+dashboard_df = pd.read_csv("dashboard/all_table_df.zip")
 dashboard_df['order_purchase_timestamp'] = pd.to_datetime(
     dashboard_df['order_purchase_timestamp']
 )
@@ -66,38 +65,119 @@ def create_city_volume_df(dashboard_df):
     )
     return city_volume
 
-# filter tahun 2018 dan status delivered
-df_2018 = dashboard_df[
-    (dashboard_df['order_status'] == 'delivered') &
-    (dashboard_df['order_purchase_timestamp'].dt.year == 2018)
-].copy()
+with st.sidebar:
+    # st.image("https://pin.it/42e4uSEQB")
+    st.header("Filter  Ecommerce Dashboard")
+    st.write("Gunakan filter di samping untuk mengeksplorasi data berdasarkan periode dan kategori produk.")
+    st.info("By: Nove lorenta 2026")
 
-# memanggil helper 
-category_revenue_df = create_category_revenue_df(df_2018)
-late_sellers_df = create_late_sellers_df(df_2018)
-city_volume_df = create_city_volume_df(df_2018)
 
 # header dashboard
-st.title("Ecommerce Performance Dashboard (2018)")
-st.markdown("Analisis kategori produk, performa seller, distrubsi kota pelanggan")
+st.title("🛍️ Ecommerce Performance Dashboard ")
 
-# sidebar filter tanggal
-with st.sidebar:
-    st.image("https://pin.it/42e4uSEQB")
-    st.header("filter")
-    st.write("Data yg ditampilkan telah difilter khusus untuk pesanan berstatus 'delivered' pada tahun 2018")
+# utk membuat colom filter dashboard
+col_filter, col_year =st.columns(2)
+with col_year:
+    selected_year = st.selectbox(
+        "Pilih Tahun Order",
+        sorted(dashboard_df['order_purchase_timestamp'].dt.year.unique())
+    )
+with col_filter:
+    selected_category = st.selectbox(
+        "Pilih Kategori Produk",
+        ["All"] + sorted(dashboard_df["product_category_name"].dropna().unique())
+    )
+
+
+# Filter data berdasarkan tahun
+filtered_df = dashboard_df[
+    dashboard_df["order_purchase_timestamp"].dt.year == selected_year
+]
+
+# Filter berdasarkan kategori jika bukan "All"
+if selected_category != "All":
+    filtered_df = filtered_df[
+        filtered_df["product_category_name"] == selected_category
+    ]
+
+
+# memanggil helper 
+category_revenue_df = create_category_revenue_df(filtered_df)
+late_sellers_df = create_late_sellers_df(filtered_df)
+city_volume_df = create_city_volume_df(filtered_df)
+
+
+
 
 # metric card
-col_m1, col_m2, col_m3 = st.columns(3)
+col_m1, col_m2, col_m3 = st.columns(3, gap="medium")
 with col_m1:
     total_rev = category_revenue_df['total_revenue'].sum()
-    st.metric("Total Revenue (2018)", f"R$ {total_rev:,.2f}")
+
+    st.markdown(f"""
+        <style>
+            .revenue-card.primary {{
+                background-color: #E8F1FF;
+                border-left: 5px solid #2563EB;
+                padding: 18px 20px;
+                border-radius: 10px;
+            }}
+
+            .revenue-label {{
+                font-size: 14px;
+                color: #475569;
+                margin-bottom: 5px;
+            }}
+
+            .revenue-value {{
+                font-size: 28px;
+                font-weight: 700;
+                color: #2563EB;
+            }}
+        </style>
+
+        <div class="revenue-card primary">
+            <div class="revenue-label">Total Revenue ({selected_year})</div>
+            <div class="revenue-value">R$ {total_rev:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
 with col_m2:
     total_orders = city_volume_df['total_orders'].sum()
-    st.metric("Total Orders", f"{total_orders:,}")
+
+    st.markdown(f"""
+         <style>
+            .revenue-card2 {{
+                border: 1px solid #2563EB;
+                padding: 18px 20px;
+                border-radius: 10px;
+            }}
+        
+            .revenue-label2 {{
+                font-size: 14px;
+                margin-bottom: 5px;
+            }}
+        
+            .revenue-value2 {{
+                font-size: 28px;
+                font-weight: 700;
+            }}
+            </style>
+            <div class="revenue-card2">
+                <div class="revenue-label2"> Total Orders</div>
+                <div class="revenue-value2">{total_orders:,}</div>
+            </div>
+    """, unsafe_allow_html=True)
+
 with col_m3:
     total_cust = city_volume_df['total_customers'].sum()
-    st.metric("Total Unique Customers", f"{total_cust:,}")
+    st.markdown(f"""
+                <div class="revenue-card2">
+                    <div class="revenue-label2"> Total Unique Customers</div>
+                    <div class="revenue-value2">{total_cust:,}</div>
+                </div>
+    """, unsafe_allow_html=True)
+
 
 st.divider()
 
@@ -105,6 +185,7 @@ st.divider()
 st.subheader("1. Revenue kategori produk")
 top5_category = category_revenue_df.head(5)
 bottom5_category = category_revenue_df.tail(5).sort_values(by='total_revenue', ascending=True)
+
 fig_category, axes_category = plt.subplots(nrows=1, ncols=2, figsize=(16,5))
 colors_top = ["#1f77b4", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3"]
 # top 5 chart
@@ -138,12 +219,13 @@ plt.tight_layout()
 st.pyplot(fig_category)
 st.divider()
 
+
+
 # no 2
 st.subheader("2. Top 10 Seller Terbanyak Keterlambatan Pengiriman")
 
 top_10_late = late_sellers_df.head(10).copy()
 top_10_late['seller_short_id'] = top_10_late['seller_id'].str[:8] + '...'
-
 colors_late = ["#d62728", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3"]
 fig_late, ax_late = plt.subplots(figsize=(12, 5))
 sns.barplot(
@@ -165,13 +247,14 @@ st.pyplot(fig_late)
 
 st.divider()
 
+
+
 # no 3
 st.subheader("3. Top 10 Kota dengan Order & Customer Terbanyak")
 
 top_10_cities = city_volume_df.head(10)
 
 fig_city, axes_city = plt.subplots(nrows=1, ncols=2, figsize=(16, 5))
-
 colors_city = ["#1f77b4", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3"]
 # Total Orders Chart
 sns.barplot(
