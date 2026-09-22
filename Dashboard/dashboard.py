@@ -15,10 +15,11 @@ st.set_page_config(
 # set stye seaborn
 sns.set_theme(style="whitegrid")
 
-dashboard_df = pd.read_csv("dashboard/all_table_df.zip")
+dashboard_df = pd.read_csv("Dashboard/all_table_df.zip")
 dashboard_df['order_purchase_timestamp'] = pd.to_datetime(
     dashboard_df['order_purchase_timestamp']
 )
+
 
 
 # helper function
