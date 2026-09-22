@@ -106,10 +106,11 @@ st.subheader("1. Revenue kategori produk")
 top5_category = category_revenue_df.head(5)
 bottom5_category = category_revenue_df.tail(5).sort_values(by='total_revenue', ascending=True)
 fig_category, axes_category = plt.subplots(nrows=1, ncols=2, figsize=(16,5))
+colors_top = ["#1f77b4", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3"]
 # top 5 chart
 sns.barplot(
     data=top5_category, x='total_revenue', y='product_category_name',
-    hue='product_category_name', palette='Blues_r', legend=False, ax=axes_category[0]
+    hue='product_category_name', palette=colors_top, legend=False, ax=axes_category[0]
 )
 axes_category[0].set_title("Top 5 Categories by Revenue", fontweight='bold')
 axes_category[0].set_xlabel("Total Revenue (BRL)")
@@ -121,9 +122,10 @@ for p in axes_category[0].patches:
 
 
 # Bottom 5 Chart
+colors_bottom = ["#d62728", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3"]
 sns.barplot(
     data=bottom5_category, x='total_revenue', y='product_category_name',
-    hue='product_category_name', palette='Reds_r', legend=False, ax=axes_category[1]
+    hue='product_category_name', palette=colors_bottom, legend=False, ax=axes_category[1]
 )
 axes_category[1].set_title("Bottom 5 Categories by Revenue", fontweight='bold')
 axes_category[1].set_xlabel("Total Revenue (BRL)")
@@ -142,10 +144,11 @@ st.subheader("2. Top 10 Seller Terbanyak Keterlambatan Pengiriman")
 top_10_late = late_sellers_df.head(10).copy()
 top_10_late['seller_short_id'] = top_10_late['seller_id'].str[:8] + '...'
 
+colors_late = ["#d62728", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3"]
 fig_late, ax_late = plt.subplots(figsize=(12, 5))
 sns.barplot(
     data=top_10_late, x='total_late_orders', y='seller_short_id',
-    hue='seller_short_id', palette='Reds_r', legend=False, ax=ax_late
+    hue='seller_short_id', palette=colors_late, legend=False, ax=ax_late
 )
 ax_late.set_title("Top 10 Sellers with Most Delayed Carrier Deliveries", fontweight='bold')
 ax_late.set_xlabel("Total Delayed Orders")
@@ -169,10 +172,11 @@ top_10_cities = city_volume_df.head(10)
 
 fig_city, axes_city = plt.subplots(nrows=1, ncols=2, figsize=(16, 5))
 
+colors_city = ["#1f77b4", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3"]
 # Total Orders Chart
 sns.barplot(
     data=top_10_cities, x='total_orders', y='customer_city',
-    hue='customer_city', palette='Blues_r', legend=False, ax=axes_city[0]
+    hue='customer_city', palette=colors_city, legend=False, ax=axes_city[0]
 )
 axes_city[0].set_title("Top 10 Cities by Total Orders", fontweight='bold')
 axes_city[0].set_xlabel("Total Orders")
@@ -183,9 +187,10 @@ for p in axes_city[0].patches:
                          ha='left', va='center', xytext=(5, 0), textcoords='offset points')
 
 # Total Unique Customers Chart
+colors_cust = ["#1f77b4", "#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3", "#d3d3d3", "#d3d3d3", "#d3d3d3","#d3d3d3"]
 sns.barplot(
     data=top_10_cities, x='total_customers', y='customer_city',
-    hue='customer_city', palette='Purples_r', legend=False, ax=axes_city[1]
+    hue='customer_city', palette=colors_cust, legend=False, ax=axes_city[1]
 )
 axes_city[1].set_title("Top 10 Cities by Unique Customers", fontweight='bold')
 axes_city[1].set_xlabel("Total Unique Customers")
